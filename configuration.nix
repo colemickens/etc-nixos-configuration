@@ -11,9 +11,10 @@ let
   #   ref = "release-19.09";
   # };
   # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
-  nixos-unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-  # nixos-unstable = import <nixos> { config = { allowUnfree = true; }; };
-  # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
+  #
+  nixos-unstable = import <nixos> { config = { allowUnfree = true; }; };
+  # nixos-unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+
   # nixos-20-09 = import (builtins.fetchGit {
   #   # Descriptive name to make the store path easier to identify
   #   name = "nixos-20.09-2020-10-08";
@@ -81,6 +82,12 @@ in {
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour.
+  networking.useDHCP = false;
+  networking.interfaces.wlp5s0.useDHCP = true;
+
   # Select internationalisation properties.
   # i18n = {
   #   consoleFont = "Lat2-Terminus16";
@@ -138,6 +145,7 @@ in {
   #     };
   # in
   environment.systemPackages = with pkgs; [
+    bat
     # steam
     zip
     # teams
@@ -271,6 +279,7 @@ in {
   };
 
   # programs.nm-applet.enable = true;
+
 
   programs.light.enable = true;
 
