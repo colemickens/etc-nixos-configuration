@@ -138,6 +138,7 @@
           '';
 
           environment.systemPackages = with pkgs; [
+            jq
             # steam
             zip
             # teams
