@@ -2,30 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
-let 
-  nixpkgs-19-03 = import (fetchTarball https://releases.nixos.org/nixos/19.03/nixos-19.03.173684.c8db7a8a16e/nixexprs.tar.xz) { };
-  # home-manager = builtins.fetchGit {
-  #   url = "https://github.com/rycee/home-manager.git";
-  #   rev = "b78b5fa4a073dfcdabdf0deb9a8cfd56050113be";
-  #   ref = "release-19.09";
-  # };
-  # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
-  #
-  nixos-unstable = import <nixos> { config = { allowUnfree = true; }; };
-  # nixos-unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-
-  # nixos-20-09 = import (builtins.fetchGit {
-  #   # Descriptive name to make the store path easier to identify
-  #   name = "nixos-20.09-2020-10-08";
-  #   url = "https://github.com/nixos/nixpkgs-channels/";
-  #   # Commit hash for nixos-unstable as of 2018-09-12
-  #   # `git ls-remote https://github.com/nixos/nixpkgs-channels nixos-unstable`
-  #   ref = "refs/heads/nixos-20.09";
-  #   rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
-  #   # rev = "ca2ba44cab47767c8127d1c8633e2b581644eb8f";
-  # }) { config = { allowUnfree = true; }; };
-in {
+{ nixpkgs-unstable, config, pkgs, ... }:
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -37,43 +14,46 @@ in {
       # )
     ];
 
- # home-manager.users.hhefesto = {
- #   # Let Home Manager install and manage itself.
- #   programs.home-manager.enable = true;
- #
- #   programs.bat.enable = true;
- #
- #   home.packages = [ # doom-emacs
- #                     pkgs.git
- #                   ];
- #
- #   # home.file.".emacs.d/init.el".text = ''
- #   #  (load "default.el")
- #   # '';
- #
- #   # Home Manager needs a bit of information about you and the
- #   # paths it should manage.
- #   home.username = "hhefesto";
- #   home.homeDirectory = "/home/hhefesto";
- #
- #   # remove when possible
- #   manual.manpages.enable = false;
- #   
- #   # This value determines the Home Manager release that your
- #   # configuration is compatible with. This helps avoid breakage
- #   # when a new Home Manager release introduces backwards
- #   # incompatible changes.
- #   #
- #   # You can update Home Manager without changing this value. See
- #   # the Home Manager release notes for a list of state version
- #   # changes in each release.
- #   home.stateVersion = "19.09";
- # };
+  # home-manager.users.hhefesto = {
+  #   # Let Home Manager install and manage itself.
+  #   programs.home-manager.enable = true;
+  #
+  #   programs.bat.enable = true;
+  #
+  #   home.packages = [ # doom-emacs
+  #                     pkgs.git
+  #                   ];
+  #
+  #   # home.file.".emacs.d/init.el".text = ''
+  #   #  (load "default.el")
+  #   # '';
+  #
+  #   # Home Manager needs a bit of information about you and the
+  #   # paths it should manage.
+  #   home.username = "hhefesto";
+  #   home.homeDirectory = "/home/hhefesto";
+  #
+  #   # remove when possible
+  #   manual.manpages.enable = false;
+  #
+  #   # This value determines the Home Manager release that your
+  #   # configuration is compatible with. This helps avoid breakage
+  #   # when a new Home Manager release introduces backwards
+  #   # incompatible changes.
+  #   #
+  #   # You can update Home Manager without changing this value. See
+  #   # the Home Manager release notes for a list of state version
+  #   # changes in each release.
+  #   home.stateVersion = "19.09";
+  # };
 
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Added for flakes. Unsure of what it does.
+  boot.isContainer = true;
 
   networking.hostName = "Olimpo"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -157,12 +137,12 @@ in {
     direnv
     ripgrep
     sox
-    nixos-unstable.zoom-us
+    nixpkgs-unstable.zoom-us
     discord
     spotify
     pgadmin
     # pgmanage
-    nixos-unstable.signal-desktop
+    nixpkgs-unstable.signal-desktop
     unetbootin
     any-nix-shell
     texlive.combined.scheme-basic
@@ -180,7 +160,7 @@ in {
     scrot
     xclip
     feh
-    nixos-unstable.firefox
+    nixpkgs-unstable.firefox
     dmenu
     tabbed
     st
@@ -200,13 +180,13 @@ in {
     gparted
     octave
     htop
-    # nixos-unstable.stack
+    # nixpkgs-unstable.stack
     nixops
     # skypeforlinux
     google-chrome
     # spotify # this loops `nixos-rebuild switch` 
     # stack2nix
-    # nixos-unstable.ghc
+    # nixpkgs-unstable.ghc
     ffmpeg
     xdotool
     # cabal2nix
@@ -441,4 +421,7 @@ in {
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "20.09"; # Did you read the comment?
-}
+
+  # Let 'nixos-version --json' know about the Git revision
+  # of this flake.
+  system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
