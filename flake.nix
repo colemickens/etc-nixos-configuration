@@ -138,7 +138,7 @@
           '';
 
           environment.systemPackages = with pkgs; [
-            jq
+            # jq
             # steam
             zip
             # teams
@@ -243,6 +243,8 @@
             gmp
             # zip
             # \for laurus-nobilis
+
+            jq
           ];
           # TODO: see about this.
           nixpkgs.config.permittedInsecurePackages = [
