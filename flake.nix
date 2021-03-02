@@ -4,7 +4,7 @@
 
   outputs = { self, nixpkgs }: {
 
-    nixosConfigurations.olimpo = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       # modules = [ ./configuration.nix { self1 = self; nixpkgs = nixpkgs; } ];
       modules = [ (
@@ -88,7 +88,7 @@
           boot.isContainer = true;
 
 
-          networking.hostName = "olimpo"; # Define your hostname.
+          networking.hostName = "Olimpo"; # Define your hostname.
           # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
           # Configure network proxy if necessary
