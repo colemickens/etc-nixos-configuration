@@ -13,72 +13,12 @@
         # and in the NixOS manual (accessible by running ‘nixos-help’).
 
         { config, pkgs, ... }:
-        let
-          # nixpkgs-19-03 = import (fetchTarball https://releases.nixos.org/nixos/19.03/nixos-19.03.173684.c8db7a8a16e/nixexprs.tar.xz) { };
-          # home-manager = builtins.fetchGit {
-          #   url = "https://github.com/rycee/home-manager.git";
-          #   rev = "b78b5fa4a073dfcdabdf0deb9a8cfd56050113be";
-          #   ref = "release-19.09";
-          # };
-          # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
-          # nixos-unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-          # nixos-unstable = import <nixos> { config = { allowUnfree = true; }; };
-          # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
-          # nixos-20-09 = import (builtins.fetchGit {
-          #   # Descriptive name to make the store path easier to identify
-          #   name = "nixos-20.09-2020-10-08";
-          #   url = "https://github.com/nixos/nixpkgs-channels/";
-          #   # Commit hash for nixos-unstable as of 2018-09-12
-          #   # `git ls-remote https://github.com/nixos/nixpkgs-channels nixos-unstable`
-          #   ref = "refs/heads/nixos-20.09";
-          #   rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
-          #   # rev = "ca2ba44cab47767c8127d1c8633e2b581644eb8f";
-          # }) { config = { allowUnfree = true; }; };
-        in {
+        {
           imports =
             [ # Include the results of the hardware scan.
               ./hardware-configuration.nix
               ./cachix.nix
-              # (import "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos")
-              # (import "${home-manager}/nixos")
-              # ( builtins.fetchTarball "https://github.com/hercules-ci/hercules-ci-agent/archive/stable.tar.gz"
-              #   + "/module.nix"
-              # )
             ];
-
-         # home-manager.users.hhefesto = {
-         #   # Let Home Manager install and manage itself.
-         #   programs.home-manager.enable = true;
-         #
-         #   programs.bat.enable = true;
-         #
-         #   home.packages = [ # doom-emacs
-         #                     pkgs.git
-         #                   ];
-         #
-         #   # home.file.".emacs.d/init.el".text = ''
-         #   #  (load "default.el")
-         #   # '';
-         #
-         #   # Home Manager needs a bit of information about you and the
-         #   # paths it should manage.
-         #   home.username = "hhefesto";
-         #   home.homeDirectory = "/home/hhefesto";
-         #
-         #   # remove when possible
-         #   manual.manpages.enable = false;
-         #
-         #   # This value determines the Home Manager release that your
-         #   # configuration is compatible with. This helps avoid breakage
-         #   # when a new Home Manager release introduces backwards
-         #   # incompatible changes.
-         #   #
-         #   # You can update Home Manager without changing this value. See
-         #   # the Home Manager release notes for a list of state version
-         #   # changes in each release.
-         #   home.stateVersion = "19.09";
-         # };
-
 
           # Use the systemd-boot EFI boot loader.
           boot.loader.systemd-boot.enable = true;
@@ -141,16 +81,6 @@
             alias where='pwd'
           '';
 
-          # For a Purescript enviroment
-          # let easy-ps = import (pkgs.fetchFromGitHub {
-          #       owner = "justinwoo";
-          #       repo = "easy-purescript-nix";
-          #       rev = "7d072cef5ad9dc33a9a9f1b7fcf8ff083ff484b3";
-          #       sha256 = "0974wrnp8rnmj1wzaxwlmk5mf1vxdbrvjc1h8jgm9j5686qn0mna";
-          #     }) {
-          #       inherit pkgs;
-          #     };
-          # in
           environment.systemPackages = with pkgs; [
             # steam
             zip
