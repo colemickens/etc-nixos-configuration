@@ -1,37 +1,80 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
-  inputs.nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, nixos-unstable }: {
+  outputs = inputs@{ self, nixpkgs, unstable }:
+    # let
+    #   system = "x86_64-linux";
+    #   inherit (inputs.nixpkgs) lib;
+    #   overlays = {
+    #     unstable = final: prev: {
+    #       unstable = (import inputs.unstable {
+    #         inherit system;
+    #       });
+    #     # pkg-sets = (
+    #     #   final: prev: {
+    #     #     unstable = import inputs.unstable { system = final.system; };
+    #     #   }
+    #     # );
+    #     };
+    #   };
 
-    # overlays = {
-    #   pkg-sets = (
-    #     final: prev: {
-    #       nixos-unstable = import nixos-unstable { system = final.system; };
-    #     }
-    #   );
-    # };
+    # in
+      {
 
     nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
+      # inherit system;
       system = "x86_64-linux";
       # modules = [ ./configuration.nix { self1 = self; nixpkgs = nixpkgs; } ];
       modules = [
         # ({ pkgs, ... }: {
         #   nixpkgs.overlays = [
         #     (final: prev: {
-        #       nixos-unstable = import nixos-unstable { system = final.system; };
+        #       unstable = import unstable { system = final.system; };
         #     })
         #   ];
 
         #   })
+        # { nixpkgs.overlays = [ overlays.unstable ];
+        #     system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev; }
+        #
+        # ({ config, pkgs, ... }:
+        #     let
+        #       overlay-unstable = final: prev: {
+        #         # unstable = import inputs.unstable { system = final.system; };
+        #         unstable = inputs.unstable.legacyPackages.x86_64-linux;
+        #       };
+        #     in
+	      #       {
+        #         nixpkgs.overlays = [ overlay-unstable ];
+        #         # environment.systemPackages = with pkgs; [
+	      #         #   # unstable.qutebrowser
+        #         #   unstable.zoom-us
+	      #         # ];
+	      #       }
+	      #   )
 
         ({ config, pkgs, ... }:
+        # let
+        #     overlay-unstable = final: prev: {
+        #       unstable = inputs.unstable.legacyPackages.x86_64-linux;
+        #     };
+        # in
         {
           imports =
             [ # Include the results of the hardware scan.
               ./hardware-configuration.nix
               ./cachix.nix
             ];
+
+          # nixpkgs.overlays = [
+          #   (final: prev: {
+          #      unstable = final.unstable;
+          #      # zoom-us = final.unstable.zoom-us;
+          #    }
+          #   )
+          # ];
+          # nixpkgs.overlays = [ overlay-unstable ];
 
           # Use the systemd-boot EFI boot loader.
           boot.loader.systemd-boot.enable = true;
@@ -66,13 +109,6 @@
           # List packages installed in system profile. To search, run:
           # $ nix search wget
           nixpkgs.config.allowUnfree = true;
-
-          nixpkgs.overlays = [
-            (final: prev: {
-               nixos-unstable = import nixos-unstable { system = final.system; };
-             }
-            )
-          ];
 
           environment.interactiveShellInit = ''
             # alias fn='cabal repl' #TODO:Fix
@@ -113,13 +149,13 @@
             direnv
             ripgrep
             sox
-            # nixos-unstable.zoom-us
+            # unstable.zoom-us
             zoom-us
             discord
             spotify
             pgadmin
             # pgmanage
-            # nixos-unstable.signal-desktop
+            # unstable.signal-desktop
             signal-desktop
             unetbootin
             any-nix-shell
@@ -138,7 +174,7 @@
             scrot
             xclip
             feh
-            # nixos-unstable.firefox
+            # unstable.firefox
             firefox
             dmenu
             tabbed
@@ -159,13 +195,13 @@
             gparted
             octave
             htop
-            # nixos-unstable.stack
+            # unstable.stack
             nixops
             # skypeforlinux
             google-chrome
             # spotify # this loops `nixos-rebuild switch`
             # stack2nix
-            # nixos-unstable.ghc
+            # unstable.ghc
             ffmpeg
             xdotool
             # cabal2nix
@@ -405,7 +441,8 @@
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
         }
 
-      ) ];
+        ) ];
+      # specialArgs = { inherit inputs; };
     };
 
   };
