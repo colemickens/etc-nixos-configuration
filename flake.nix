@@ -1,8 +1,8 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
-  # inputs.nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs }: {
+  outputs = { self, nixpkgs, nixos-unstable }: {
 
     nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -93,14 +93,14 @@
             direnv
             ripgrep
             sox
-            # nixos-unstable.zoom-us
-            zoom-us
+            nixos-unstable.zoom-us
+            # zoom-us
             discord
             spotify
             pgadmin
             # pgmanage
-            # nixos-unstable.signal-desktop
-            signal-desktop
+            nixos-unstable.signal-desktop
+            # signal-desktop
             unetbootin
             any-nix-shell
             texlive.combined.scheme-basic
@@ -118,8 +118,8 @@
             scrot
             xclip
             feh
-            # nixos-unstable.firefox
-            firefox
+            nixos-unstable.firefox
+            # firefox
             dmenu
             tabbed
             st
