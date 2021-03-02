@@ -2,10 +2,32 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ nixpkgs-unstable, config, pkgs, ... }:
+{ self, nixpkgs, nixos-unstable, config, pkgs, ... }:
+let
+  # nixpkgs-19-03 = import (fetchTarball https://releases.nixos.org/nixos/19.03/nixos-19.03.173684.c8db7a8a16e/nixexprs.tar.xz) { };
+  # home-manager = builtins.fetchGit {
+  #   url = "https://github.com/rycee/home-manager.git";
+  #   rev = "b78b5fa4a073dfcdabdf0deb9a8cfd56050113be";
+  #   ref = "release-19.09";
+  # };
+  # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
+  # nixos-unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
+  # nixos-unstable = import <nixos> { config = { allowUnfree = true; }; };
+  # nixos-20-09 = import <nixos> { config = { allowUnfree = true; }; };
+  # nixos-20-09 = import (builtins.fetchGit {
+  #   # Descriptive name to make the store path easier to identify
+  #   name = "nixos-20.09-2020-10-08";
+  #   url = "https://github.com/nixos/nixpkgs-channels/";
+  #   # Commit hash for nixos-unstable as of 2018-09-12
+  #   # `git ls-remote https://github.com/nixos/nixpkgs-channels nixos-unstable`
+  #   ref = "refs/heads/nixos-20.09";
+  #   rev = "c59ea8b8a0e7f927e7291c14ea6cd1bd3a16ff38";
+  #   # rev = "ca2ba44cab47767c8127d1c8633e2b581644eb8f";
+  # }) { config = { allowUnfree = true; }; };
+in {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ./hardware-configuration.nix { nixpkgs = nixpkgs; }
       ./cachix.nix
       # (import "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/master.tar.gz}/nixos")
       # (import "${home-manager}/nixos")
@@ -14,59 +36,53 @@
       # )
     ];
 
-  # home-manager.users.hhefesto = {
-  #   # Let Home Manager install and manage itself.
-  #   programs.home-manager.enable = true;
-  #
-  #   programs.bat.enable = true;
-  #
-  #   home.packages = [ # doom-emacs
-  #                     pkgs.git
-  #                   ];
-  #
-  #   # home.file.".emacs.d/init.el".text = ''
-  #   #  (load "default.el")
-  #   # '';
-  #
-  #   # Home Manager needs a bit of information about you and the
-  #   # paths it should manage.
-  #   home.username = "hhefesto";
-  #   home.homeDirectory = "/home/hhefesto";
-  #
-  #   # remove when possible
-  #   manual.manpages.enable = false;
-  #
-  #   # This value determines the Home Manager release that your
-  #   # configuration is compatible with. This helps avoid breakage
-  #   # when a new Home Manager release introduces backwards
-  #   # incompatible changes.
-  #   #
-  #   # You can update Home Manager without changing this value. See
-  #   # the Home Manager release notes for a list of state version
-  #   # changes in each release.
-  #   home.stateVersion = "19.09";
-  # };
+ # home-manager.users.hhefesto = {
+ #   # Let Home Manager install and manage itself.
+ #   programs.home-manager.enable = true;
+ #
+ #   programs.bat.enable = true;
+ #
+ #   home.packages = [ # doom-emacs
+ #                     pkgs.git
+ #                   ];
+ #
+ #   # home.file.".emacs.d/init.el".text = ''
+ #   #  (load "default.el")
+ #   # '';
+ #
+ #   # Home Manager needs a bit of information about you and the
+ #   # paths it should manage.
+ #   home.username = "hhefesto";
+ #   home.homeDirectory = "/home/hhefesto";
+ #
+ #   # remove when possible
+ #   manual.manpages.enable = false;
+ #
+ #   # This value determines the Home Manager release that your
+ #   # configuration is compatible with. This helps avoid breakage
+ #   # when a new Home Manager release introduces backwards
+ #   # incompatible changes.
+ #   #
+ #   # You can update Home Manager without changing this value. See
+ #   # the Home Manager release notes for a list of state version
+ #   # changes in each release.
+ #   home.stateVersion = "19.09";
+ # };
 
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Added for flakes. Unsure of what it does.
+  # Added because it is present in nix flakes examples.
   boot.isContainer = true;
 
-  networking.hostName = "Olimpo"; # Define your hostname.
+  networking.hostName = "olimpo"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.wlp5s0.useDHCP = true;
 
   # Select internationalisation properties.
   # i18n = {
@@ -82,11 +98,11 @@
   #   TERMINAL = [ "st" ];
   #   OH_MY_ZSH = [ "${pkgs.oh-my-zsh}/share/oh-my-zsh" ];
   # };
-  
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   nixpkgs.config.allowUnfree = true;
-  
+
   environment.interactiveShellInit = ''
     # alias fn='cabal repl' #TODO:Fix
     # alias 'cabal run'='cabal new-run' #TODO:Fix
@@ -108,7 +124,7 @@
     alias xclip='xclip -selection c'
     alias please='sudo'
     alias n='nix-shell shell.nix'
-    alias nod='nixops deploy -d laurus-nobilis-gce' 
+    alias nod='nixops deploy -d laurus-nobilis-gce'
     alias sn='sudo nixos-rebuild switch'
     alias gr='grep -R --exclude='TAGS' --exclude-dir={.stack-work,dist-newstyle,result,result-2} -n'
     alias where='pwd'
@@ -125,7 +141,6 @@
   #     };
   # in
   environment.systemPackages = with pkgs; [
-    bat
     # steam
     zip
     # teams
@@ -137,12 +152,12 @@
     direnv
     ripgrep
     sox
-    nixpkgs-unstable.zoom-us
+    nixos-unstable.zoom-us
     discord
     spotify
     pgadmin
     # pgmanage
-    nixpkgs-unstable.signal-desktop
+    nixos-unstable.signal-desktop
     unetbootin
     any-nix-shell
     texlive.combined.scheme-basic
@@ -160,7 +175,7 @@
     scrot
     xclip
     feh
-    nixpkgs-unstable.firefox
+    nixos-unstable.firefox
     dmenu
     tabbed
     st
@@ -174,19 +189,19 @@
     dropbox-cli
     gnome3.nautilus
     calibre
-    nixpkgs-19-03.taffybar
+    # nixpkgs-19-03.taffybar
     sshpass
     gimp
     gparted
     octave
     htop
-    # nixpkgs-unstable.stack
+    # nixos-unstable.stack
     nixops
     # skypeforlinux
     google-chrome
-    # spotify # this loops `nixos-rebuild switch` 
+    # spotify # this loops `nixos-rebuild switch`
     # stack2nix
-    # nixpkgs-unstable.ghc
+    # nixos-unstable.ghc
     ffmpeg
     xdotool
     # cabal2nix
@@ -215,7 +230,7 @@
     gnumake
     nodejs
     nodePackages.yarn
-    nixpkgs-19-03.yarn2nix
+    # nixpkgs-19-03.yarn2nix
     nodePackages.typescript
     nodePackages.create-react-app
 
@@ -233,11 +248,11 @@
     "google-chrome-81.0.4044.138"
     "openssl-1.0.2u"
   ];
-  
+
   fonts.fonts = with pkgs; [
     hack-font
   ];
-  
+
   # services.lorri.enable = true;
 
   systemd.user.services.dropbox = {
@@ -259,7 +274,6 @@
   };
 
   # programs.nm-applet.enable = true;
-
 
   programs.light.enable = true;
 
@@ -301,7 +315,7 @@
   #   source $ZSH/oh-my-zsh.sh
   # '';
   # programs.zsh.promptInit = ""; # Clear this to avoid a conflict with oh-my-zsh
-  
+
   # List services that you want to enable:
 
   # services.hercules-ci-agent.enable = true;
@@ -346,7 +360,7 @@
     # autoLogin.user = "hhefesto";
   };
   services.xserver.desktopManager.gnome3.enable = true;
-  
+
   services.postgresql = {
       enable = true;
       package = pkgs.postgresql_11;
@@ -368,7 +382,7 @@
 
   virtualisation.docker.enable = true;
   virtualisation.virtualbox.host.enable = true;
-  
+
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
 
@@ -381,7 +395,7 @@
   #   isNormalUser = true;
   #   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   # };
-  
+
 
   users.mutableUsers = false;
 
@@ -425,3 +439,4 @@
   # Let 'nixos-version --json' know about the Git revision
   # of this flake.
   system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+}

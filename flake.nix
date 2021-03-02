@@ -1,12 +1,12 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
-  inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, nixpkgs-unstable }: {
+  outputs = { self, nixpkgs, nixos-unstable }: {
 
-    nixosConfigurations.container = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.olimpo = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ ./configuration.nix ];
+      modules = [ ./configuration.nix { self = self; nixpkgs = nixpkgs; nixos-unstable = nixos-unstable; } ];
     };
 
   };
