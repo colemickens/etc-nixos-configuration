@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ self, nixpkgs, nixos-unstable, config, pkgs, ... }:
+{ nixpkgs, config, pkgs, ... }:
 let
   # nixpkgs-19-03 = import (fetchTarball https://releases.nixos.org/nixos/19.03/nixos-19.03.173684.c8db7a8a16e/nixexprs.tar.xz) { };
   # home-manager = builtins.fetchGit {
@@ -76,6 +76,7 @@ in {
 
   # Added because it is present in nix flakes examples.
   boot.isContainer = true;
+
 
   networking.hostName = "olimpo"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -152,12 +153,14 @@ in {
     direnv
     ripgrep
     sox
-    nixos-unstable.zoom-us
+    # nixos-unstable.zoom-us
+    zoom-us
     discord
     spotify
     pgadmin
     # pgmanage
-    nixos-unstable.signal-desktop
+    # nixos-unstable.signal-desktop
+    signal-desktop
     unetbootin
     any-nix-shell
     texlive.combined.scheme-basic
@@ -175,7 +178,8 @@ in {
     scrot
     xclip
     feh
-    nixos-unstable.firefox
+    # nixos-unstable.firefox
+    firefox
     dmenu
     tabbed
     st
