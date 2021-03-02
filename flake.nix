@@ -4,15 +4,28 @@
 
   outputs = { self, nixpkgs, nixos-unstable }: {
 
+    # overlays = {
+    #   pkg-sets = (
+    #     final: prev: {
+    #       nixos-unstable = import nixos-unstable { system = final.system; };
+    #     }
+    #   );
+    # };
+
     nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       # modules = [ ./configuration.nix { self1 = self; nixpkgs = nixpkgs; } ];
-      modules = [ (
-        # Edit this configuration file to define what should be installed on
-        # your system.  Help is available in the configuration.nix(5) man page
-        # and in the NixOS manual (accessible by running ‘nixos-help’).
+      modules = [
+        # ({ pkgs, ... }: {
+        #   nixpkgs.overlays = [
+        #     (final: prev: {
+        #       nixos-unstable = import nixos-unstable { system = final.system; };
+        #     })
+        #   ];
 
-        { config, pkgs, ... }:
+        #   })
+
+        ({ config, pkgs, ... }:
         {
           imports =
             [ # Include the results of the hardware scan.
@@ -93,14 +106,14 @@
             direnv
             ripgrep
             sox
-            nixos-unstable.zoom-us
-            # zoom-us
+            # nixos-unstable.zoom-us
+            zoom-us
             discord
             spotify
             pgadmin
             # pgmanage
-            nixos-unstable.signal-desktop
-            # signal-desktop
+            # nixos-unstable.signal-desktop
+            signal-desktop
             unetbootin
             any-nix-shell
             texlive.combined.scheme-basic
@@ -118,8 +131,8 @@
             scrot
             xclip
             feh
-            nixos-unstable.firefox
-            # firefox
+            # nixos-unstable.firefox
+            firefox
             dmenu
             tabbed
             st
