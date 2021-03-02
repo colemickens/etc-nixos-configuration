@@ -67,6 +67,13 @@
           # $ nix search wget
           nixpkgs.config.allowUnfree = true;
 
+          nixpkgs.overlays = [
+            (final: prev: {
+               nixos-unstable = import nixos-unstable { system = final.system; };
+             }
+            )
+          ];
+
           environment.interactiveShellInit = ''
             # alias fn='cabal repl' #TODO:Fix
             # alias 'cabal run'='cabal new-run' #TODO:Fix
