@@ -1,8 +1,10 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
-  inputs.unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+  description = "hhefesto's system configuration";
 
-  outputs = inputs@{ self, nixpkgs, unstable }:
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
+  # inputs.unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = inputs@{ self, nixpkgs, unstable, ... }:
     # let
     #   system = "x86_64-linux";
     #   inherit (inputs.nixpkgs) lib;
@@ -22,7 +24,7 @@
     # in
       {
 
-    nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.olimpo = nixpkgs.lib.nixosSystem {
       # inherit system;
       system = "x86_64-linux";
       # modules = [ ./configuration.nix { self1 = self; nixpkgs = nixpkgs; } ];
@@ -54,7 +56,7 @@
 	      #       }
 	      #   )
 
-        ({ config, pkgs, ... }:
+        ({ config, pkgs, lib, modulesPath, inputs, ... }:
         # let
         #     overlay-unstable = final: prev: {
         #       unstable = inputs.unstable.legacyPackages.x86_64-linux;
@@ -74,7 +76,7 @@
           #    }
           #   )
           # ];
-          # nixpkgs.overlays = [ overlay-unstable ];
+          # nixpkgs.overlays = [ inputs.unstable.overlay ];
 
           # Use the systemd-boot EFI boot loader.
           boot.loader.systemd-boot.enable = true;
@@ -84,7 +86,7 @@
           boot.isContainer = true;
 
 
-          networking.hostName = "Olimpo"; # Define your hostname.
+          networking.hostName = "olimpo"; # Define your hostname.
           # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
           # Configure network proxy if necessary
@@ -138,7 +140,7 @@
           '';
 
           environment.systemPackages = with pkgs; [
-            # jq
+            jq
             # steam
             zip
             # teams
@@ -243,8 +245,6 @@
             gmp
             # zip
             # \for laurus-nobilis
-
-            jq
           ];
           # TODO: see about this.
           nixpkgs.config.permittedInsecurePackages = [
@@ -266,6 +266,8 @@
               PassEnvironment = "DISPLAY";
             };
           };
+
+          # TODO: turn off?
           systemd.user.services."urxvtd" = {
             enable = true;
             description = "rxvt unicode daemon";
@@ -319,15 +321,6 @@
           # '';
           # programs.zsh.promptInit = ""; # Clear this to avoid a conflict with oh-my-zsh
 
-          # List services that you want to enable:
-
-          # services.hercules-ci-agent.enable = true;
-          # services.hercules-ci-agent.concurrentTasks = 4; # Number of jobs to run
-          # services.hercules-ci-agent.patchNix = true;
-
-          # Enable the OpenSSH daemon.
-          # services.openssh.enable = true;
-
           # Open ports in the firewall.
           networking.firewall.allowedTCPPorts = [ 3000 5432 587 5938 ];
           networking.firewall.allowedUDPPorts = [ 5938 ];
@@ -341,7 +334,16 @@
           # sound.enable = true;
           # hardware.pulseaudio.enable = true;
 
+          # List services that you want to enable:
+
+          # services.hercules-ci-agent.enable = true;
+          # services.hercules-ci-agent.concurrentTasks = 4; # Number of jobs to run
+          # services.hercules-ci-agent.patchNix = true;
+
+          # Enable the OpenSSH daemon.
           services.openssh.enable = true;
+
+          services.sshd.enable = true;
 
           # Enable the X11 windowing system.
           services.xserver.enable = true;
@@ -437,7 +439,7 @@
           # compatible, in order to avoid breaking some software such as database
           # servers. You should change this only after NixOS release notes say you
           # should.
-          system.stateVersion = "20.09"; # Did you read the comment?
+          # system.stateVersion = "20.09"; # Did you read the comment?
 
           # Let 'nixos-version --json' know about the Git revision
           # of this flake.
@@ -445,7 +447,7 @@
         }
 
         ) ];
-      # specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs; };
     };
 
   };
