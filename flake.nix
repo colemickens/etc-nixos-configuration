@@ -25,7 +25,7 @@
     # in
       {
 
-    nixosConfigurations.olimpo = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.Olimpo = nixpkgs.lib.nixosSystem {
       # inherit system;
       system = "x86_64-linux";
       # modules = [ ./configuration.nix { self1 = self; nixpkgs = nixpkgs; } ];
@@ -87,7 +87,7 @@
           boot.isContainer = true;
 
 
-          networking.hostName = "olimpo"; # Define your hostname.
+          networking.hostName = "Olimpo"; # Define your hostname.
           # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
           # Configure network proxy if necessary
@@ -134,7 +134,7 @@
             alias xclip='xclip -selection c'
             alias please='sudo'
             alias n='nix-shell shell.nix'
-            alias nod='nixops deploy -d laurus-nobilis-gce'
+            # alias nod='nixops deploy -d laurus-nobilis-gce'
             alias sn='sudo nixos-rebuild switch'
             alias gr='grep -R --exclude='TAGS' --exclude-dir={.stack-work,dist-newstyle,result,result-2} -n'
             alias where='pwd'
@@ -149,7 +149,10 @@
             parallel
             pywal
             stylish-haskell
-            python
+
+
+            # python
+
             direnv
             ripgrep
             sox
@@ -157,7 +160,7 @@
             zoom-us
             discord
             spotify
-            pgadmin
+            # pgadmin
             # pgmanage
             # unstable.signal-desktop
             signal-desktop
@@ -200,7 +203,9 @@
             octave
             htop
             # unstable.stack
-            nixops
+
+            # nixops
+
             # skypeforlinux
             google-chrome
             # spotify # this loops `nixos-rebuild switch`
@@ -227,7 +232,7 @@
             # nixos.zathura
             unrar
             unzip
-            teamviewer
+            # teamviewer
             hack-font
             cachix
             tree
@@ -444,7 +449,7 @@
 
           # Let 'nixos-version --json' know about the Git revision
           # of this flake.
-          system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+          # system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
         }
 
         ) ];
