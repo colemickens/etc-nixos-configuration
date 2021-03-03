@@ -1,10 +1,11 @@
 {
   description = "hhefesto's system configuration";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
+  # inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.03";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   # inputs.unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = inputs@{ self, nixpkgs, unstable, ... }:
+  outputs = inputs@{ self, nixpkgs, ... }:
     # let
     #   system = "x86_64-linux";
     #   inherit (inputs.nixpkgs) lib;
